@@ -1,0 +1,13 @@
+{
+  "ConnectionStrings": {
+    "Test": "Username=postgres;Password=Passw0rd#;Host=localhost;Port=5432;Database=index_sandbox_test;Connection Lifetime=0"
+  },
+  "SchemaInfo": {
+    "Tables": {
+      "Users": {
+        "Name": "users",
+        "Columns": [ "id", "first_name", "last_name" ]
+      }
+    }
+  }
+}
