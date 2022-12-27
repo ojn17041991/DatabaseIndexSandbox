@@ -1,65 +1,37 @@
 ﻿using DatabaseIndexSandbox.Abstract.DB.Queries;
 using DatabaseIndexSandbox.Postgres.Inserts;
-using DatabaseIndexSandboxTest.Postgres.Config;
-using DatabaseIndexSandboxTest.Postgres.Utils;
+using DatabaseIndexSandboxTest.Config;
+using DatabaseIndexSandboxTest.Utils.Database;
+using FluentAssertions;
+using FluentAssertions.Execution;
 using Npgsql;
-using System.Reflection;
 using Xunit;
 
 namespace DatabaseIndexSandboxTest.Postgres.Query
 {
     public class PostgresInsertTester
     {
-        private ConfigHelper config = new ConfigHelper();
-        private string connectionString = string.Empty;
-        private string tableName = string.Empty;
-        private string[] columnNames = new string[0];
+        // Create a ConfigHelper to read from the test config file.
+        private ConfigHelper config = new ConfigHelper("Config/config.json");
         private NpgsqlConnection connection;
 
+        // Create an object to compare connection strings.
         private ConnectionStringTestHelper connectionStringTestHelper = new ConnectionStringTestHelper();
 
         public PostgresInsertTester()
         {
-            connectionString = config.ConnectionString;
-            tableName = config.TableName;
-            columnNames = config.ColumnNames;
-            connection = new NpgsqlConnection(connectionString);
+            // Set up a connection once in the constructor to save on memory usage.
+            connection = new NpgsqlConnection(config.ConnectionString);
             connection.Open();
         }
 
         [Fact]
-        public void ConnectionIsSetCorrectly()
+        public void InsertIsConstructedCorrectly()
         {
-            // Set up the PostgresInsert args.
-            string commandText = string.Empty;
-            IDictionary<string, object> parameters = new Dictionary<string, object>();
+            // Set up the command text.
+            string commandText = "INSERT INTO table (column) VALUES ('dummy')";
 
-            // Create the PostgresInsert object.
-            INonQuery insert = new PostgresInsert(connection, commandText, parameters);
-
-            // Assert that the values in the PostgresInsert Connection property matche those in the one provided.
-            Assert.True(connectionStringTestHelper.ConnectionStringsAreEqual(insert.Connection.ConnectionString, connectionString));
-        }
-
-        [Fact]
-        public void CommandTextIsSetCorrectly()
-        {
-            // Set up the Postgres Insert args.
-            string commandText = "SELECT * FROM MyTable";
-            IDictionary<string, object> parameters = new Dictionary<string, object>();
-
-            // Create the PostgresInsert object.
-            INonQuery insert = new PostgresInsert(connection, commandText, parameters);
-
-            // Assert that the value in the PostgresInsert CommandText property matches the one provided.
-            Assert.True(insert.CommandText == commandText);
-        }
-
-        [Fact]
-        public void ParametersAreSetCorrectly()
-        {
-            // Set up the Postgres Insert args.
-            string commandText = string.Empty;
+            // Set up the parameters.
             string columnName = "@MyColumn";
             string columnValue = "ColumnValue";
             IDictionary<string, object> parameters = new Dictionary<string, object>()
@@ -70,11 +42,18 @@ namespace DatabaseIndexSandboxTest.Postgres.Query
             // Create the PostgresInsert object.
             INonQuery insert = new PostgresInsert(connection, commandText, parameters);
 
-            // Assert that the values in the PostgresInsert Parameters property matches the one provided.
-            Assert.True(
-                insert.Parameters.First().Key == columnName &&
-                insert.Parameters.First().Value.ToString() == columnValue
-            );
+            // Assert that the connection, command text and parameters all match the original values. 
+            using (new AssertionScope())
+            {
+                Assert.True(
+                    connectionStringTestHelper.ConnectionStringsAreEqual(
+                        insert.Connection.ConnectionString, config.ConnectionString
+                    )
+                );
+                insert.CommandText.Should().Be(commandText);
+                insert.Parameters.First().Key.Should().Be(columnName);
+                insert.Parameters.First().Value.Should().Be(columnValue);
+            }
         }
 
         [Theory]
@@ -86,37 +65,28 @@ namespace DatabaseIndexSandboxTest.Postgres.Query
         public void InsertsWithoutError(params object[] arguments)
         {
             // Set up the command text.
-            string commandParameters = String.Join(',', columnNames);
-            string commandArguments = String.Join(',', columnNames.Select(c => '@' + c));
-            string commandText = $"INSERT INTO {tableName} ({commandParameters}) VALUES ({commandArguments})";
+            string commandParameters = String.Join(',', config.ColumnNames);
+            string commandArguments = String.Join(',', config.ColumnNames.Select(c => '@' + c));
+            string commandText = $"INSERT INTO {config.TableName} ({commandParameters}) VALUES ({commandArguments})";
 
             // Set up the parameters.
             IDictionary<string, object> parameters = new Dictionary<string, object>();
-            for (int i = 0 ; i < columnNames.Length ; i++)
+            for (int i = 0 ; i < config.ColumnNames.Length ; i++)
             {
-                parameters.Add('@' + columnNames[i], arguments[i]);
+                parameters.Add('@' + config.ColumnNames[i], arguments[i]);
             }
 
             // Create the PostgresInsert object.
             INonQuery insert = new PostgresInsert(connection, commandText, parameters);
+            Action action = () => insert.Execute();
 
-            // Execute the INSERT command and check for errors.
-            bool exceptionOccurred = false;
-            try
-            {
-                insert.Execute();
-            }
-            catch (Exception)
-            {
-                exceptionOccurred = true;
-            }
-
-            // Assert that no errors occurred.
-            Assert.False(exceptionOccurred);
+            // The insert execution should not throw an Exception.
+            action.Should().NotThrow<Exception>();
         }
 
         ~PostgresInsertTester()
         {
+            // We're done testing the inserts, so close the connection.
             connection.Close();
         }
     }

@@ -1,6 +1,4 @@
-﻿using Xunit;
-
-namespace DatabaseIndexSandboxTest.Postgres.Utils
+﻿namespace DatabaseIndexSandboxTest.Utils.Database
 {
     public class ConnectionStringTestHelper
     {

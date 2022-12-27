@@ -14,22 +14,30 @@ namespace DatabaseIndexSandbox.Abstract.DB.Helper
             ConnectionString = getConnectionString();
         }
 
-        public string HostName { get; }
+        public GenericDatabaseObjectHelper(string connectionString)
+        {
+            ConnectionString = connectionString;
+            decomposeConnectionString(ConnectionString);
+        }
 
-        public string DatabaseName { get; }
+        public string HostName { get; protected set; } = string.Empty;
 
-        public int PortNumber { get; }
+        public string DatabaseName { get; protected set; } = string.Empty;
 
-        public string UserName { get; }
+        public int PortNumber { get; protected set; } = default(int);
 
-        public string Password { get; }
+        public string UserName { get; protected set; } = string.Empty;
 
-        public string ConnectionString { get; }
+        public string Password { get; protected set; } = string.Empty;
+
+        public string ConnectionString { get; protected set; } = string.Empty;
 
         public DbConnection Connection { get { return getConnection(); } }
 
-        internal abstract string getConnectionString();
+        protected abstract string getConnectionString();
 
-        internal abstract DbConnection getConnection();
+        protected abstract DbConnection getConnection();
+
+        protected abstract void decomposeConnectionString(string connectionString);
     }
 }
