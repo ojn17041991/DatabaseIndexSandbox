@@ -2,7 +2,6 @@
 using DatabaseIndexSandbox.Abstract.DB.Queries;
 using DatabaseIndexSandbox.Abstract.DB.Tables;
 using DatabaseIndexSandbox.Postgres.Factories;
-using Npgsql;
 using System.Data.Common;
 
 namespace DatabaseIndexSandbox.Postgres.Tables

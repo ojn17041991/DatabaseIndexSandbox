@@ -17,7 +17,7 @@ namespace DatabaseIndexSandbox.Abstract.DB.Factories
         public string TableName { get; set; } = string.Empty;
         public IList<string> Parameters { get; set; } = new List<string>();
         public IList<IList<object>> Arguments { get; set; } = new List<IList<object>>();
-        protected abstract int MaxBatchSize { get; set; }
+        public int MaxBatchSize { get; protected set; } = 10000;
         public int BatchPosition { get; protected set; }
 
 

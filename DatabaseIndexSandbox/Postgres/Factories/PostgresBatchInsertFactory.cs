@@ -10,10 +10,8 @@ namespace DatabaseIndexSandbox.Postgres.Factories
     {
         public PostgresBatchInsertFactory(DbConnection connection) : base(connection)
         {
-            MaxBatchSize = 10000;
+            // Stub.
         }
-
-        protected override int MaxBatchSize { get; set; }
 
         public override INonQuery Generate(string tableName, IDictionary<string, object> parameters)
         {
@@ -25,7 +23,7 @@ namespace DatabaseIndexSandbox.Postgres.Factories
         {
             // This will loop indefinitely, on repeat.
             // Outside this function, you will need to use a while loop
-            //   comparing BatchPosition to the total number of inserts required.
+            //  comparing BatchPosition to the total number of inserts required.
             IList<INonQuery> queries = new List<INonQuery>();
 
             // Get the SQL command text.

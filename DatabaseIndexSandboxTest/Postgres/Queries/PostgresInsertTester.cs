@@ -25,6 +25,8 @@ namespace DatabaseIndexSandboxTest.Postgres.Query
             connection.Open();
         }
 
+
+
         [Fact]
         public void InsertIsConstructedCorrectly()
         {
@@ -45,14 +47,16 @@ namespace DatabaseIndexSandboxTest.Postgres.Query
             // Assert that the connection, command text and parameters all match the original values. 
             using (new AssertionScope())
             {
-                Assert.True(
-                    connectionStringTestHelper.ConnectionStringsAreEqual(
-                        insert.Connection.ConnectionString, config.ConnectionString
-                    )
-                );
+                // Connection string should match config.
+                connectionStringTestHelper.ConnectionStringsAreEqual(
+                    insert.Connection.ConnectionString, config.ConnectionString
+                ).Should().BeTrue();
+
+                // Command text should match original.
                 insert.CommandText.Should().Be(commandText);
-                insert.Parameters.First().Key.Should().Be(columnName);
-                insert.Parameters.First().Value.Should().Be(columnValue);
+
+                // Paramters should match originals.
+                insert.Parameters[columnName].Should().Be(columnValue);
             }
         }
 
@@ -71,7 +75,7 @@ namespace DatabaseIndexSandboxTest.Postgres.Query
 
             // Set up the parameters.
             IDictionary<string, object> parameters = new Dictionary<string, object>();
-            for (int i = 0 ; i < config.ColumnNames.Length ; i++)
+            for (int i = 0; i < config.ColumnNames.Length; i++)
             {
                 parameters.Add('@' + config.ColumnNames[i], arguments[i]);
             }
@@ -83,6 +87,8 @@ namespace DatabaseIndexSandboxTest.Postgres.Query
             // The insert execution should not throw an Exception.
             action.Should().NotThrow<Exception>();
         }
+
+
 
         ~PostgresInsertTester()
         {

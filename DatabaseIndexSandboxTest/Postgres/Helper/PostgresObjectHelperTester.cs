@@ -16,6 +16,8 @@ namespace DatabaseIndexSandboxTest.Postgres.Helper
         // Create an object to compare connection strings.
         private ConnectionStringTestHelper connectionStringTestHelper = new ConnectionStringTestHelper();
 
+
+
         [Fact]
         public void ComponentsAreStoredCorrectly()
         {
@@ -68,12 +70,11 @@ namespace DatabaseIndexSandboxTest.Postgres.Helper
                 password
             );
 
-            // Assert that the connection string generated is the same as the one expected.
-            Assert.True(
-                connectionStringTestHelper.ConnectionStringsAreEqual(
-                    postgresObjectHelper.ConnectionString, connectionString
-                )
-            );
+            // Assert that the connection string generated is the same as the one expected.            
+            connectionStringTestHelper.ConnectionStringsAreEqual(
+                postgresObjectHelper.ConnectionString,
+                connectionString
+            ).Should().BeTrue();
         }
 
         [Theory]
@@ -111,33 +112,7 @@ namespace DatabaseIndexSandboxTest.Postgres.Helper
             action.Should().NotThrow<Exception>();
         }
 
-        [Theory]
-        [InlineData("", "postgres", 5432, "admin", "pass123!")]
-        [InlineData("localhost", "", 5432, "admin", "pass123!")]
-        [InlineData("localhost", "postgres", 0, "admin", "pass123!")]
-        [InlineData("localhost", "postgres", 5432, "", "pass123!")]
-        [InlineData("localhost", "postgres", 5432, "admin", "")]
-        [InlineData("", "", 0, "", "")]
-        public void CantGenerateConnectionWithInvalidConnectionString(
-            string hostName,
-            string databaseName,
-            int portNumber,
-            string userName,
-            string password)
-        {
-            // Create the PostgresObjectHelper with incomplete connection string data.
-            IDatabaseObjectHelper postgresObjectHelper = new PostgresObjectHelper(
-                hostName,
-                databaseName,
-                portNumber,
-                userName,
-                password
-            );
 
-            // Open the connection as an action and confirm that the action DOES throw an exception.
-            Action action = () => postgresObjectHelper.Connection.Open();
-            action.Should().Throw<Exception>();
-        }
 
         public static IEnumerable<object[]> connectionStringTestArgs()
         {
