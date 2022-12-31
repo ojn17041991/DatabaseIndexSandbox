@@ -1,4 +1,5 @@
 ﻿using DatabaseIndexSandbox.Abstract.DB.Queries;
+using DatabaseIndexSandbox.Abstract.DB.Tables;
 using DatabaseIndexSandbox.Postgres.Inserts;
 using DatabaseIndexSandboxTest.Config;
 using DatabaseIndexSandboxTest.Utils.Database;
@@ -14,15 +15,19 @@ namespace DatabaseIndexSandboxTest.Postgres.Query
         // Create a ConfigHelper to read from the test config file.
         private ConfigHelper config = new ConfigHelper("Config/config.json");
         private NpgsqlConnection connection;
+        private IList<IColumnConfig> columns;
 
         // Create an object to compare connection strings.
         private ConnectionStringTestHelper connectionStringTestHelper = new ConnectionStringTestHelper();
+
+
 
         public PostgresInsertTester()
         {
             // Set up a connection once in the constructor to save on memory usage.
             connection = new NpgsqlConnection(config.ConnectionString);
             connection.Open();
+            columns = config.Tables[config.UsersTableName];
         }
 
 
@@ -69,15 +74,15 @@ namespace DatabaseIndexSandboxTest.Postgres.Query
         public void InsertsWithoutError(params object[] arguments)
         {
             // Set up the command text.
-            string commandParameters = String.Join(',', config.ColumnNames);
-            string commandArguments = String.Join(',', config.ColumnNames.Select(c => '@' + c));
-            string commandText = $"INSERT INTO {config.TableName} ({commandParameters}) VALUES ({commandArguments})";
+            string commandParameters = String.Join(',', columns.Select(c => c.Name));
+            string commandArguments = String.Join(',', columns.Select(c => '@' + c.Name));
+            string commandText = $"INSERT INTO {config.UsersTableName} ({commandParameters}) VALUES ({commandArguments})";
 
             // Set up the parameters.
             IDictionary<string, object> parameters = new Dictionary<string, object>();
-            for (int i = 0; i < config.ColumnNames.Length; i++)
+            for (int i = 0; i < columns.Count; i++)
             {
-                parameters.Add('@' + config.ColumnNames[i], arguments[i]);
+                parameters.Add(columns[i].Name, arguments[i]);
             }
 
             // Create the PostgresInsert object.

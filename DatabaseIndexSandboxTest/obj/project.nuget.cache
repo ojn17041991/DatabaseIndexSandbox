@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "oXmwe3i3GsPtdsohqhQqm6cAHPRyuBMaSKnikIl9x48rscvw3/48FDGBI66iOvAvkKUjGTR+ZrjQRXzqv/v5ag==",
+  "dgSpecHash": "2Rm5iIkQjkcvqemJjrKNK94QweQXz+BCEY7k/a5MxM5XrRT2ux+6AL72uM44KCGA6eQmVTXqNoEa6ZhVHITvLg==",
   "success": true,
   "projectFilePath": "C:\\Users\\Oliver\\source\\repos\\DatabaseIndexSandbox\\DatabaseIndexSandboxTest\\DatabaseIndexSandboxTest.csproj",
   "expectedPackageFiles": [
@@ -10,6 +10,7 @@
     "C:\\Users\\Oliver\\.nuget\\packages\\microsoft.csharp\\4.0.1\\microsoft.csharp.4.0.1.nupkg.sha512",
     "C:\\Users\\Oliver\\.nuget\\packages\\microsoft.extensions.configuration\\7.0.0\\microsoft.extensions.configuration.7.0.0.nupkg.sha512",
     "C:\\Users\\Oliver\\.nuget\\packages\\microsoft.extensions.configuration.abstractions\\7.0.0\\microsoft.extensions.configuration.abstractions.7.0.0.nupkg.sha512",
+    "C:\\Users\\Oliver\\.nuget\\packages\\microsoft.extensions.configuration.binder\\7.0.1\\microsoft.extensions.configuration.binder.7.0.1.nupkg.sha512",
     "C:\\Users\\Oliver\\.nuget\\packages\\microsoft.extensions.configuration.fileextensions\\7.0.0\\microsoft.extensions.configuration.fileextensions.7.0.0.nupkg.sha512",
     "C:\\Users\\Oliver\\.nuget\\packages\\microsoft.extensions.configuration.json\\7.0.0\\microsoft.extensions.configuration.json.7.0.0.nupkg.sha512",
     "C:\\Users\\Oliver\\.nuget\\packages\\microsoft.extensions.fileproviders.abstractions\\7.0.0\\microsoft.extensions.fileproviders.abstractions.7.0.0.nupkg.sha512",

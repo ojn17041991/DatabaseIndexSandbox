@@ -1,4 +1,7 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using DatabaseIndexSandbox.Abstract.DB.Tables;
+using DatabaseIndexSandbox.Generic.Tables;
+using DatabaseIndexSandboxTest.Config.Templates;
+using Microsoft.Extensions.Configuration;
 
 namespace DatabaseIndexSandboxTest.Config
 {
@@ -13,8 +16,9 @@ namespace DatabaseIndexSandboxTest.Config
         public string UserName { get; } = string.Empty;
         public string Password { get; } = string.Empty;
 
-        public string TableName { get; } = string.Empty;
-        public string[] ColumnNames { get; } = new string[0];
+        public IDictionary<string, IList<IColumnConfig>> Tables { get; } = new Dictionary<string, IList<IColumnConfig>>();
+        public string UsersTableName { get; } = string.Empty;
+        public string CounterTableName { get; } = string.Empty;
 
         public ConfigHelper(string configLocation)
         {
@@ -29,8 +33,29 @@ namespace DatabaseIndexSandboxTest.Config
             UserName = configuration.GetSection("ConnectionStrings:Test:Components:UserName")?.Value ?? string.Empty;
             Password = configuration.GetSection("ConnectionStrings:Test:Components:Password")?.Value ?? string.Empty;
 
-            TableName = configuration.GetSection("SchemaInfo:Tables:Users:Name")?.Value ?? string.Empty;
-            ColumnNames = configuration.GetSection("SchemaInfo:Tables:Users:Columns")?.GetChildren().Select(c => c.Value ?? string.Empty).ToArray() ?? new string[0];
+            // Read each table defined in the config.
+
+            foreach (IConfigurationSection tableSection in configuration.GetSection("SchemaInfo:Tables").GetChildren())
+            {
+                string tableName = configuration.GetSection($"{tableSection.Path}:Name")?.Value ?? string.Empty;
+                IList<ColumnConfigTemplate> columnTemplates = new List<ColumnConfigTemplate>();
+
+                // Read the columns from the config, store them in a template, convert to IColumnConfig, and store.
+                foreach (IConfigurationSection columnSection in configuration.GetSection($"SchemaInfo:Tables:{tableSection.Key}:Columns").GetChildren())
+                {
+                    ColumnConfigTemplate column = new ColumnConfigTemplate();
+                    configuration.GetSection(columnSection.Path).Bind(column);
+                    columnTemplates.Add(column);
+                }
+
+                // We need to get all templated first, then order them, then convert to IColumnConfig, and append to the table.
+                IList<IColumnConfig> columns = columnTemplates.OrderBy(c => c.Id).Select(c => c.ToColumnConfig()).ToList();
+                Tables.Add(tableName, columns);
+            }
+
+            // Get the table names.
+            UsersTableName = configuration.GetSection($"SchemaInfo:Tables:Users:Name")?.Value ?? string.Empty;
+            CounterTableName = configuration.GetSection($"SchemaInfo:Tables:Counter:Name")?.Value ?? string.Empty;
         }
     }
 }

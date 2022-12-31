@@ -1,5 +1,6 @@
 ﻿using DatabaseIndexSandbox.Abstract.DB.Factories.NonQueries.Inserts;
 using DatabaseIndexSandbox.Abstract.DB.Queries;
+using DatabaseIndexSandbox.Abstract.DB.Tables;
 using DatabaseIndexSandbox.Postgres.Factories;
 using DatabaseIndexSandboxTest.Config;
 using DatabaseIndexSandboxTest.Utils.Database;
@@ -15,6 +16,7 @@ namespace DatabaseIndexSandboxTest.Postgres.Factory
         // Create a ConfigHelper to read from the test config file.
         private ConfigHelper config = new ConfigHelper("Config/config.json");
         private NpgsqlConnection connection;
+        private IList<IColumnConfig> columns;
 
         // Create an object to compare connection strings.
         private ConnectionStringTestHelper connectionStringTestHelper = new ConnectionStringTestHelper();
@@ -34,7 +36,9 @@ namespace DatabaseIndexSandboxTest.Postgres.Factory
             // Set up a connection once in the constructor to save on memory usage.
             connection = new NpgsqlConnection(config.ConnectionString);
             connection.Open();
+            columns = config.Tables[config.UsersTableName];
         }
+
 
 
         [Fact]
@@ -63,11 +67,11 @@ namespace DatabaseIndexSandboxTest.Postgres.Factory
             // Assert that the table name and parameters match between the factory and config.
             using (new AssertionScope())
             {
-                factory.TableName.Should().Be(config.TableName);
+                factory.TableName.Should().Be(config.UsersTableName);
 
-                for (int i = 0; i < config.ColumnNames.Length; ++i)
+                for (int i = 0; i < columns.Count; ++i)
                 {
-                    factory.Parameters[i].Should().Be('@' + config.ColumnNames[i]);
+                    factory.Parameters[i].Should().Be('@' + columns[i].Name);
                 }
             }
         }
@@ -123,15 +127,15 @@ namespace DatabaseIndexSandboxTest.Postgres.Factory
                     ).Should().BeTrue();
 
                     // Confirm that each insert has all required parameters.
-                    foreach (string columnName in config.ColumnNames)
+                    foreach (IColumnConfig column in columns)
                     {
-                        Assert.True(inserts[i].Parameters.ContainsKey('@' + columnName));
+                        Assert.True(inserts[i].Parameters.ContainsKey('@' + column.Name));
                     }
 
                     // Confirm that each insert has the correct arguments.
                     for (int j = 0; j < arguments[i].Count; ++j)
                     {
-                        inserts[i].Parameters['@' + config.ColumnNames[j]].Should().Be(arguments[i][j]);
+                        inserts[i].Parameters['@' + columns[j].Name].Should().Be(arguments[i][j]);
                     }
                 }
             }
@@ -180,8 +184,8 @@ namespace DatabaseIndexSandboxTest.Postgres.Factory
                 if (options.HasFlag(factoryOption.CreateBatch))
                 {
                     // Add the table name and parameters to create the batch.
-                    IList<string> parameters = config.ColumnNames.Select(c => '@' + c).ToList();
-                    factory.CreateBatch(config.TableName, parameters);
+                    IList<string> parameters = columns.Select(c => '@' + c.Name).ToList();
+                    factory.CreateBatch(config.UsersTableName, parameters);
 
                     // Check if we're adding arguments in bulk. If so we need to add more than the factory max batch size.
                     int numberOfArgumentLoops = 1;

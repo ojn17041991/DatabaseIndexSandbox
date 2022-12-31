@@ -13,9 +13,43 @@
   },
   "SchemaInfo": {
     "Tables": {
+      // Users table is for NonUnique columns.
       "Users": {
         "Name": "users",
-        "Columns": [ "id", "first_name", "last_name" ]
+        "Columns": {
+          // Column order needs to be maintained, and .NET will alphabetize them when reading the config file.
+          // Adding the ID fields to re-order after .NET has read the settings in.
+          "Id": {
+            "Id": 1,
+            "Name": "id",
+            "ColumnType": "System.Int32",
+            "Values": [ 101, 102, 103 ]
+          },
+          "FirstName": {
+            "Id": 2,
+            "Name": "first_name",
+            "ColumnType": "System.String",
+            "Values": [ "Test1", "Test2", "Test3" ]
+          },
+          "LastName": {
+            "Id": 3,
+            "Name": "last_name",
+            "ColumnType": "System.String",
+            "Values": [ "User1", "User2", "User3" ]
+          }
+        }
+      },
+      // Counter is for AutoIncrementing columns.
+      "Counter": {
+        "Name": "counter",
+        "Columns": {
+          "Id": {
+            "Id": 1,
+            "Name": "id",
+            "ColumnType": "System.Int32",
+            "Attribute": 4
+          }
+        }
       }
     }
   }
