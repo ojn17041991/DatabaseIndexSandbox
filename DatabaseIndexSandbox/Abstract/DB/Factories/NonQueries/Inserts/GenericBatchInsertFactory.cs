@@ -2,7 +2,7 @@
 using System.Data.Common;
 using System.Text;
 
-namespace DatabaseIndexSandbox.Abstract.DB.Factories
+namespace DatabaseIndexSandbox.Abstract.DB.Factories.NonQueries.Inserts
 {
     public abstract class GenericBatchInsertFactory : IBatchInsertFactory
     {
@@ -26,9 +26,9 @@ namespace DatabaseIndexSandbox.Abstract.DB.Factories
         {
             StringBuilder commandText = new StringBuilder();
             commandText.AppendLine($"INSERT INTO {tableName} (");
-            commandText.AppendLine(string.Join(',', parameters.Select(p => p.Substring(1))));
-            commandText.AppendLine(") VALUES (");
             commandText.AppendLine(string.Join(',', parameters.Select(p => p)));
+            commandText.AppendLine(") VALUES (");
+            commandText.AppendLine(string.Join(',', parameters.Select(p => '@' + p)));
             commandText.AppendLine(")");
             return commandText.ToString();
         }

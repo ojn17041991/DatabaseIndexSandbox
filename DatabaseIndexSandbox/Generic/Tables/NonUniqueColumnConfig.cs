@@ -5,16 +5,11 @@ namespace DatabaseIndexSandbox.Generic.Tables
     /// <summary>
     /// Basic configuration of a non-unique column.
     /// </summary>
-    public class NonUniqueColumnConfig : INonUniqueColumnConfig
+    public class NonUniqueColumnConfig : BaseNonUniqueColumnConfig
     {
-        public NonUniqueColumnConfig(string name, IList<object> values)
+        public NonUniqueColumnConfig(string name, Type columnType, IList<object> values) : base(name, columnType, values)
         {
-            Name = name;
-            Values = values;
+            // Stub.
         }
-
-        public string Name { get; }
-
-        public IList<object> Values { get; }
     }
 }

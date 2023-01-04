@@ -1,4 +1,4 @@
-﻿using DatabaseIndexSandbox.Abstract.DB.Factories;
+﻿using DatabaseIndexSandbox.Abstract.DB.Factories.NonQueries.Inserts;
 using DatabaseIndexSandbox.Abstract.DB.Queries;
 using DatabaseIndexSandbox.Abstract.DB.Tables;
 using DatabaseIndexSandbox.Postgres.Factories;
@@ -6,7 +6,7 @@ using System.Data.Common;
 
 namespace DatabaseIndexSandbox.Postgres.Tables
 {
-    public class PostgresTablePopulater : ITablePopulater
+    public class PostgresTablePopulater : ITablePopulator
     {
         public PostgresTablePopulater(DbConnection connection, string tableName, int numberOfOperations)
         {
@@ -38,7 +38,12 @@ namespace DatabaseIndexSandbox.Postgres.Tables
 
             for (int i = 0; i < NumberOfOperations; ++i)
             {
-                insertFactory.AddArgumentsToBatch(Parameters.Select(p => p.Values[random.Next(p.Values.Count)]).ToList());
+                // Get the next value for the parameter and cast it to the parameter's type.
+                insertFactory.AddArgumentsToBatch(
+                    Parameters.Select(
+                        p => Convert.ChangeType(p.GetNextValue(), p.ColumnType)
+                    ).ToList()
+                );
             }
 
             do
@@ -52,4 +57,3 @@ namespace DatabaseIndexSandbox.Postgres.Tables
         }
     }
 }
-

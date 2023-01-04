@@ -35,18 +35,14 @@ using (DbConnection connection = databaseObjectHelper.Connection)
     connection.Open();
 
     // Build up a bulk INSERT statement and run it against the database in batches.
-    ITablePopulater populater = new PostgresTablePopulater(connection, "person", 100000000);
+    ITablePopulator populater = new PostgresTablePopulater(connection, "person", 100000000);
     populater.AddParameters(
         new List<IColumnConfig>() {
-            new NonUniqueColumnConfig("@FirstName", firstNamesResponse.contents.names.Select(n => (object)n).ToList()),
-            new NonUniqueColumnConfig("@LastName", lastNamesResponse.contents.names.Select(n => (object)n).ToList())
+            new NonUniqueColumnConfig("FirstName", typeof(string), firstNamesResponse.contents.names.Select(n => (object)n).ToList()),
+            new NonUniqueColumnConfig("LastName", typeof(string), lastNamesResponse.contents.names.Select(n => (object)n).ToList())
         }
     );
     populater.Populate();
 
     connection.Close();
 }
-
-// Then write some unit tests. Try changing the DB type to see how resilient it is.
-// Any changes you make should not break existing tests.
-// Try to use fluent assertions and mocking. You need to run an insert to test properly, but maybe hard-code a separate table?

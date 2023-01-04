@@ -16,3 +16,6 @@ C:\Users\Oliver\source\repos\DatabaseIndexSandbox\DatabaseIndexSandbox\obj\Debug
 C:\Users\Oliver\source\repos\DatabaseIndexSandbox\DatabaseIndexSandbox\obj\Debug\net6.0\DatabaseIndexSandbox.csproj.CopyComplete
 C:\Users\Oliver\source\repos\DatabaseIndexSandbox\DatabaseIndexSandbox\bin\Debug\net6.0\Microsoft.Extensions.Logging.Abstractions.dll
 C:\Users\Oliver\source\repos\DatabaseIndexSandbox\DatabaseIndexSandbox\bin\Debug\net6.0\Npgsql.dll
+C:\Users\Oliver\source\repos\DatabaseIndexSandbox\DatabaseIndexSandbox\bin\Debug\net6.0\Microsoft.Extensions.Configuration.Abstractions.dll
+C:\Users\Oliver\source\repos\DatabaseIndexSandbox\DatabaseIndexSandbox\bin\Debug\net6.0\Microsoft.Extensions.Configuration.Binder.dll
+C:\Users\Oliver\source\repos\DatabaseIndexSandbox\DatabaseIndexSandbox\bin\Debug\net6.0\Microsoft.Extensions.Primitives.dll

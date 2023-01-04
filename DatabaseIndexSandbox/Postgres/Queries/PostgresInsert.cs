@@ -23,7 +23,7 @@ namespace DatabaseIndexSandbox.Postgres.Inserts
             {
                 foreach (KeyValuePair<string, object> parameter in Parameters)
                 {
-                    command.Parameters.AddWithValue(parameter.Key, parameter.Value);
+                    command.Parameters.AddWithValue('@' + parameter.Key, parameter.Value);
                 }
                 command.ExecuteNonQuery();
             }

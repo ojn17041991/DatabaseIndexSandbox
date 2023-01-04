@@ -1,10 +1,13 @@
 {
   "version": 2,
-  "dgSpecHash": "N/fJ56HKSr0mU2SPLQqLUXL0e56DaOyULV0MsuCpZmpZZ5HDWhXGcT4N3uAQEs/CiRr4Kejrq7NMmkL5PtzxbQ==",
+  "dgSpecHash": "o8XE7EML3I5dJWLR3S9eAu0YdHvE1nXib1n1l2z5w7b9FtgCEmMRMw0JeTyzKEvOWMqoXviCxZA4PnDZBGPYGg==",
   "success": true,
   "projectFilePath": "C:\\Users\\Oliver\\source\\repos\\DatabaseIndexSandbox\\DatabaseIndexSandbox\\DatabaseIndexSandbox.csproj",
   "expectedPackageFiles": [
+    "C:\\Users\\Oliver\\.nuget\\packages\\microsoft.extensions.configuration.abstractions\\7.0.0\\microsoft.extensions.configuration.abstractions.7.0.0.nupkg.sha512",
+    "C:\\Users\\Oliver\\.nuget\\packages\\microsoft.extensions.configuration.binder\\7.0.1\\microsoft.extensions.configuration.binder.7.0.1.nupkg.sha512",
     "C:\\Users\\Oliver\\.nuget\\packages\\microsoft.extensions.logging.abstractions\\6.0.0\\microsoft.extensions.logging.abstractions.6.0.0.nupkg.sha512",
+    "C:\\Users\\Oliver\\.nuget\\packages\\microsoft.extensions.primitives\\7.0.0\\microsoft.extensions.primitives.7.0.0.nupkg.sha512",
     "C:\\Users\\Oliver\\.nuget\\packages\\npgsql\\7.0.0\\npgsql.7.0.0.nupkg.sha512",
     "C:\\Users\\Oliver\\.nuget\\packages\\system.runtime.compilerservices.unsafe\\6.0.0\\system.runtime.compilerservices.unsafe.6.0.0.nupkg.sha512"
   ],

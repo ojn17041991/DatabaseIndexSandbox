@@ -1,6 +1,6 @@
 ﻿using DatabaseIndexSandbox.Abstract.DB.Queries;
 
-namespace DatabaseIndexSandbox.Abstract.DB.Factories
+namespace DatabaseIndexSandbox.Abstract.DB.Factories.NonQueries
 {
     internal interface INonQueryFactory : IBaseQueryFactory
     {

@@ -6,6 +6,9 @@
     public interface IColumnConfig
     {
         string Name { get; }
-        IList<object> Values { get; }
+
+        Type ColumnType { get; }
+
+        object GetNextValue();
     }
 }

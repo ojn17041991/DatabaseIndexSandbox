@@ -1,4 +1,4 @@
-﻿using DatabaseIndexSandbox.Abstract.DB.Factories;
+﻿using DatabaseIndexSandbox.Abstract.DB.Factories.NonQueries.Inserts;
 using DatabaseIndexSandbox.Abstract.DB.Queries;
 using DatabaseIndexSandbox.Postgres.Inserts;
 using Npgsql;

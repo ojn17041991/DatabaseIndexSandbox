@@ -2,7 +2,7 @@
 
 namespace DatabaseIndexSandbox.Abstract.DB.Tables
 {
-    public interface ITablePopulater
+    public interface ITablePopulator
     {
         DbConnection Connection { get; }
         string TableName { get; }
